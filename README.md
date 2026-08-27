@@ -1,69 +1,97 @@
 # STFT-Based Speech Noise Reduction
 
-## ELEC5305 Acoustic, Speech and Signal Processing
+## Evaluation and Improvement of Spectral Subtraction
 
-**Student:** Yuanyi Zhang  
-**SID:** 550545073  
-**GitHub Username:** zyuanyi76-lgtm  
+**ELEC5305 Acoustics, Speech and Signal Processing**
+
+**Student:** Yuanyi Zhang
+**SID:** 550545073
+**GitHub Username:** zyuanyi76-lgtm
 
 ## Project Overview
 
-Background noise can significantly reduce the quality and intelligibility of speech signals. This project investigates speech enhancement using Short-Time Fourier Transform (STFT)-based signal processing techniques.
+Background noise can reduce the intelligibility and quality of recorded speech. This project investigates speech noise reduction using Short-Time Fourier Transform (STFT)-based spectral subtraction.
 
-The project will implement and compare two classical speech noise reduction methods:
+The project will first implement a basic spectral subtraction algorithm as a baseline. The baseline system will then be evaluated under controlled noisy conditions to identify its strengths and limitations.
 
-1. Spectral Subtraction
-2. Wiener Filtering
+Based on the experimental results, an improved spectral subtraction method will be developed to address problems such as residual noise, speech distortion, and musical-noise artefacts.
 
-Both methods will operate in the time-frequency domain. The noisy speech signal will first be transformed using the STFT, processed in the frequency domain, and then reconstructed using the inverse STFT and overlap-add method.
+The final project will compare the baseline and improved implementations under the same experimental conditions.
 
-## Project Objectives
+## Research Question
 
-The main objectives of this project are:
+**How effectively can basic spectral subtraction reduce speech noise, and can a modified spectral subtraction method reduce processing artefacts while maintaining or improving speech-enhancement performance?**
 
-- To understand and implement STFT-based speech processing.
-- To implement spectral subtraction for speech noise reduction.
-- To implement Wiener filtering for speech enhancement.
-- To compare the performance of the two approaches.
-- To evaluate the processed speech using objective metrics and spectrogram analysis.
+## Project Structure
 
-## Proposed Method
+The planned investigation follows an iterative signal-processing workflow:
 
-The planned signal-processing workflow is:
+Clean Speech
+↓
+Add Background Noise
+↓
+STFT
+↓
+Basic Spectral Subtraction
+↓
+Inverse STFT and Overlap-Add
+↓
+Baseline Evaluation
+↓
+Identify Shortcomings
+↓
+Improved Spectral Subtraction
+↓
+Re-evaluation
+↓
+Baseline vs Improved Comparison
 
-Clean Speech  
-↓  
-Add Background Noise  
-↓  
-STFT  
-↓  
-Spectral Subtraction / Wiener Filtering  
-↓  
-Inverse STFT  
-↓  
-Enhanced Speech  
-↓  
-Performance Evaluation
+## Baseline Method
 
-MATLAB will be used as the main implementation platform.
+The baseline system will:
 
-## Evaluation
+* divide noisy speech into overlapping frames;
+* apply a Hann window;
+* calculate the STFT;
+* estimate the background-noise spectrum;
+* subtract the estimated noise magnitude from the noisy speech spectrum; and
+* reconstruct the enhanced speech using inverse STFT and overlap-add.
 
-The performance of the two methods will be compared using:
+## Planned Improvement
 
-- Input and output Signal-to-Noise Ratio (SNR)
-- SNR improvement
-- Waveform comparison
-- Spectrogram comparison
-- Listening comparison
+The improved implementation will investigate:
 
-## Expected Outcomes
+* an over-subtraction factor to control the strength of noise reduction; and
+* a spectral floor to prevent excessive attenuation of individual frequency components.
+
+These modifications will be investigated as possible methods for reducing musical-noise artefacts and speech distortion.
+
+## Experimental Evaluation
+
+The baseline and improved systems will be tested under the same conditions.
+
+Planned evaluation methods include:
+
+* input SNR;
+* output SNR;
+* SNR improvement;
+* waveform comparison;
+* spectrogram comparison; and
+* listening-based qualitative analysis.
+
+Several input SNR levels, such as 0 dB, 5 dB, and 10 dB, will be investigated.
+
+## Expected Outputs
 
 The project is expected to produce:
 
-- A MATLAB implementation of spectral subtraction.
-- A MATLAB implementation of Wiener filtering.
-- Clean, noisy, and enhanced speech samples.
-- Waveform and spectrogram visualisations.
-- Quantitative comparison of speech enhancement performance.
-- Final project report and GitHub documentation.
+* MATLAB source code;
+* a basic spectral subtraction implementation;
+* an improved spectral subtraction implementation;
+* clean and noisy speech examples;
+* baseline and improved enhanced-speech examples;
+* waveform and spectrogram visualisations;
+* quantitative SNR comparisons;
+* analysis of the limitations of both implementations;
+* a final project report; and
+* a video demonstration of the signal-processing code.
