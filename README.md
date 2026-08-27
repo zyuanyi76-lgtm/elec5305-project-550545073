@@ -1,97 +1,122 @@
 # STFT-Based Speech Noise Reduction
 
-## Evaluation and Improvement of Spectral Subtraction
+## Evaluation and Modification of Spectral Subtraction
 
 **ELEC5305 Acoustics, Speech and Signal Processing**
 
-**Student:** Yuanyi Zhang
-**SID:** 550545073
-**GitHub Username:** zyuanyi76-lgtm
+**Student:** Yuanyi Zhang  
+**SID:** 550545073  
+**GitHub Username:** zyuanyi76-lgtm  
 
 ## Project Overview
 
-Background noise can reduce the intelligibility and quality of recorded speech. This project investigates speech noise reduction using Short-Time Fourier Transform (STFT)-based spectral subtraction.
+Background noise can reduce the intelligibility and quality of recorded speech. This project investigates STFT-based spectral subtraction for speech noise reduction.
 
-The project will first implement a basic spectral subtraction algorithm as a baseline. The baseline system will then be evaluated under controlled noisy conditions to identify its strengths and limitations.
-
-Based on the experimental results, an improved spectral subtraction method will be developed to address problems such as residual noise, speech distortion, and musical-noise artefacts.
-
-The final project will compare the baseline and improved implementations under the same experimental conditions.
+A basic spectral subtraction algorithm will first be implemented as a baseline system. Its performance will then be evaluated under controlled noisy conditions. Based on the observed shortcomings, a modified spectral subtraction method using an over-subtraction factor and a spectral floor will be developed and evaluated under the same test conditions.
 
 ## Research Question
 
-**How effectively can basic spectral subtraction reduce speech noise, and can a modified spectral subtraction method reduce processing artefacts while maintaining or improving speech-enhancement performance?**
+Across white and non-stationary environmental noise at input SNRs of 0, 5, and 10 dB, how do basic and modified spectral subtraction compare in SNR improvement and STOI, and what trade-off between residual noise and speech distortion is introduced by the over-subtraction factor and spectral floor?
 
-## Project Structure
+## Experimental Setup
 
-The planned investigation follows an iterative signal-processing workflow:
+- Sampling rate: 16 kHz
+- Audio format: mono
+- Clean speech: 12 English utterances from 2 speakers
+- Speech source: LibriSpeech test-clean corpus
+- Noise types:
+  - White Gaussian noise
+  - Non-stationary environmental noise from MUSAN
+- Input SNR levels:
+  - 0 dB
+  - 5 dB
+  - 10 dB
+- Total mixtures: 72
 
-Clean Speech
-↓
-Add Background Noise
-↓
-STFT
-↓
-Basic Spectral Subtraction
-↓
-Inverse STFT and Overlap-Add
-↓
-Baseline Evaluation
-↓
-Identify Shortcomings
-↓
-Improved Spectral Subtraction
-↓
-Re-evaluation
-↓
-Baseline vs Improved Comparison
+The dataset will be divided into:
+
+- Development set: 4 utterances, producing 24 mixtures
+- Test set: 8 utterances, producing 48 mixtures
+
+The development set will be used to select the over-subtraction and spectral-floor parameters. Final evaluation will be performed only on the test set.
+
+## Signal Processing Method
+
+The main STFT parameters will be fixed as:
+
+- Hann window: 512 samples (32 ms)
+- Hop size: 256 samples
+- Overlap: 50%
+- FFT size: 512
+
+The processing workflow is:
+
+Clean Speech  
+↓  
+Add Noise  
+↓  
+STFT  
+↓  
+Basic Spectral Subtraction  
+↓  
+Inverse STFT and Overlap-Add  
+↓  
+Baseline Evaluation  
+↓  
+Modified Spectral Subtraction  
+↓  
+Re-evaluation  
+↓  
+Baseline vs Modified Comparison
 
 ## Baseline Method
 
-The baseline system will:
+The baseline magnitude estimate is:
 
-* divide noisy speech into overlapping frames;
-* apply a Hann window;
-* calculate the STFT;
-* estimate the background-noise spectrum;
-* subtract the estimated noise magnitude from the noisy speech spectrum; and
-* reconstruct the enhanced speech using inverse STFT and overlap-add.
+|S_base(m,k)| = max(|Y(m,k)| - |N_hat(k)|, 0)
 
-## Planned Improvement
+The noise spectrum will be estimated from a 0.5-second noise-only segment placed before the speech.
 
-The improved implementation will investigate:
+The noisy phase will be retained during signal reconstruction.
 
-* an over-subtraction factor to control the strength of noise reduction; and
-* a spectral floor to prevent excessive attenuation of individual frequency components.
+## Modified Method
 
-These modifications will be investigated as possible methods for reducing musical-noise artefacts and speech distortion.
+The modified method is:
 
-## Experimental Evaluation
+|S_mod(m,k)| = max(|Y(m,k)| - alpha|N_hat(k)|, beta|N_hat(k)|)
 
-The baseline and improved systems will be tested under the same conditions.
+where:
 
-Planned evaluation methods include:
+- alpha controls over-subtraction
+- beta controls the spectral floor
 
-* input SNR;
-* output SNR;
-* SNR improvement;
-* waveform comparison;
-* spectrogram comparison; and
-* listening-based qualitative analysis.
+Only alpha and beta will be tuned during development.
 
-Several input SNR levels, such as 0 dB, 5 dB, and 10 dB, will be investigated.
+## Evaluation
+
+The two formal evaluation metrics are:
+
+- SNR improvement
+- Short-Time Objective Intelligibility (STOI)
+
+Additional analysis will include:
+
+- Spectrogram comparison
+- Waveform comparison
+- Informal listening comparison
+- Residual-noise analysis
+- Musical-noise and speech-distortion analysis
 
 ## Expected Outputs
 
-The project is expected to produce:
+The project will produce:
 
-* MATLAB source code;
-* a basic spectral subtraction implementation;
-* an improved spectral subtraction implementation;
-* clean and noisy speech examples;
-* baseline and improved enhanced-speech examples;
-* waveform and spectrogram visualisations;
-* quantitative SNR comparisons;
-* analysis of the limitations of both implementations;
-* a final project report; and
-* a video demonstration of the signal-processing code.
+- MATLAB source code
+- Baseline spectral subtraction implementation
+- Modified spectral subtraction implementation
+- Clean, noisy, and enhanced speech samples
+- SNR and STOI results
+- Waveform and spectrogram comparisons
+- Final project report
+- Video demonstration
+- GitHub project documentation
