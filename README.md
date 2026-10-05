@@ -241,19 +241,19 @@ For one environmental-noise example at approximately 0 dB input SNR:
 
 The result shows clear noise reduction, although further analysis is required to examine speech distortion and musical-noise artefacts.
 
-### Preliminary Figures
+## Preliminary Figures
 
-#### Environmental Noise Variation
+### Environmental Noise Variation
 
-![Environmental Noise RMS Variation](results/figures/environmental_noise_rms_variation.png)
+![Environmental Noise RMS Variation](environmental_noise_rms_variation.png)
 
-#### STFT / ISTFT Reconstruction
+### STFT / ISTFT Reconstruction
 
-![STFT ISTFT Reconstruction](results/figures/stft_istft_reconstruction_check.png)
+![STFT ISTFT Reconstruction](stft_istft_reconstruction_check.png)
 
-#### Basic Spectral Subtraction
+### Basic Spectral Subtraction
 
-![Basic Spectral Subtraction](results/figures/basic_spectral_subtraction_waveforms.png)
+![Basic Spectral Subtraction](basic_spectral_subtraction_waveforms.png)
 
 ### Next Steps
 
