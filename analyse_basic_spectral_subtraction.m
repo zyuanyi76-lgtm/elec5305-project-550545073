@@ -1,0 +1,219 @@
+clear;
+clc;
+close all;
+
+%% =========================================================
+% ELEC5305
+% Baseline Spectral Subtraction Analysis
+%% =========================================================
+
+projectRoot = ...
+    "D:\课件\5305\elec5305-project-550545073";
+
+enhancementRoot = fullfile( ...
+    projectRoot, ...
+    "code", ...
+    "enhancement");
+
+addpath(enhancementRoot);
+
+%% Load one difficult development example
+
+devRoot = fullfile( ...
+    projectRoot, ...
+    "data", ...
+    "mixtures", ...
+    "dev");
+
+files = dir(fullfile( ...
+    devRoot, ...
+    "*__environmental__0dB.mat"));
+
+if isempty(files)
+    error("No environmental 0 dB development file found.");
+end
+
+testFile = fullfile( ...
+    files(1).folder, ...
+    files(1).name);
+
+data = load(testFile);
+
+fullNoisy = data.fullNoisy;
+cleanReference = data.cleanReference;
+noiseReference = data.noiseReference;
+fs = data.fs;
+
+%% Fixed parameters
+
+prefixDuration = 0.5;
+
+winLength = 512;
+hopSize = 256;
+nfft = 512;
+
+%% Run baseline method
+
+result = basic_spectral_subtraction( ...
+    fullNoisy, ...
+    fs, ...
+    prefixDuration, ...
+    winLength, ...
+    hopSize, ...
+    nfft);
+
+%% Remove noise-only prefix
+
+prefixSamples = round(prefixDuration * fs);
+
+enhancedSpeech = ...
+    result.enhancedFull(prefixSamples+1:end);
+
+L = min([ ...
+    length(cleanReference), ...
+    length(noiseReference), ...
+    length(enhancedSpeech)]);
+
+cleanReference = cleanReference(1:L);
+noiseReference = noiseReference(1:L);
+enhancedSpeech = enhancedSpeech(1:L);
+
+noisySpeech = cleanReference + noiseReference;
+
+%% SNR analysis
+
+inputSNR = 10*log10( ...
+    sum(cleanReference.^2) / ...
+    sum(noiseReference.^2));
+
+outputError = enhancedSpeech - cleanReference;
+
+outputSNR = 10*log10( ...
+    sum(cleanReference.^2) / ...
+    (sum(outputError.^2) + eps));
+
+snrImprovement = outputSNR - inputSNR;
+
+fprintf("===== BASELINE ANALYSIS =====\n");
+fprintf("Input SNR: %.3f dB\n", inputSNR);
+fprintf("Output SNR: %.3f dB\n", outputSNR);
+fprintf("SNR improvement: %.3f dB\n", snrImprovement);
+
+%% =========================================================
+% Spectrogram comparison
+%% =========================================================
+
+window = hann(winLength, 'periodic');
+noverlap = winLength - hopSize;
+
+figure;
+
+subplot(3,1,1);
+
+spectrogram( ...
+    cleanReference, ...
+    window, ...
+    noverlap, ...
+    nfft, ...
+    fs, ...
+    'yaxis');
+
+title("Clean Speech");
+xlabel("Time (s)");
+ylabel("Frequency (kHz)");
+
+subplot(3,1,2);
+
+spectrogram( ...
+    noisySpeech, ...
+    window, ...
+    noverlap, ...
+    nfft, ...
+    fs, ...
+    'yaxis');
+
+title(sprintf( ...
+    "Noisy Speech - Input SNR %.1f dB", ...
+    inputSNR));
+
+xlabel("Time (s)");
+ylabel("Frequency (kHz)");
+
+subplot(3,1,3);
+
+spectrogram( ...
+    enhancedSpeech, ...
+    window, ...
+    noverlap, ...
+    nfft, ...
+    fs, ...
+    'yaxis');
+
+title(sprintf( ...
+    "Basic Spectral Subtraction - Output SNR %.2f dB", ...
+    outputSNR));
+
+xlabel("Time (s)");
+ylabel("Frequency (kHz)");
+
+%% Save figure
+
+figureRoot = fullfile( ...
+    projectRoot, ...
+    "results", ...
+    "figures");
+
+if ~exist(figureRoot, "dir")
+    mkdir(figureRoot);
+end
+
+saveas(gcf, ...
+    fullfile( ...
+    figureRoot, ...
+    "basic_spectral_subtraction_spectrograms.png"));
+
+%% =========================================================
+% Save listening examples
+%% =========================================================
+
+audioRoot = fullfile( ...
+    projectRoot, ...
+    "results", ...
+    "audio");
+
+if ~exist(audioRoot, "dir")
+    mkdir(audioRoot);
+end
+
+saveAudio( ...
+    cleanReference, ...
+    fullfile(audioRoot, "demo_clean.wav"), ...
+    fs);
+
+saveAudio( ...
+    noisySpeech, ...
+    fullfile(audioRoot, "demo_noisy_0dB.wav"), ...
+    fs);
+
+saveAudio( ...
+    enhancedSpeech, ...
+    fullfile(audioRoot, "demo_basic_enhanced.wav"), ...
+    fs);
+
+fprintf("\nListening examples saved.\n");
+fprintf("Figure saved.\n");
+fprintf("Done.\n");
+
+%% Local function
+
+function saveAudio(x, filename, fs)
+
+    peakValue = max(abs(x));
+
+    if peakValue > 0.99
+        x = x * (0.99 / peakValue);
+    end
+
+    audiowrite(filename, x, fs);
+
+end
