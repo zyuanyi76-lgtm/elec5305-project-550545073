@@ -196,6 +196,75 @@ It will not include:
 - STFT-window optimisation;
 - formal subjective listening experiments.
 
+## Progress to Date
+
+The project has completed the initial data preparation, STFT validation, and baseline spectral-subtraction implementation.
+
+### Dataset Preparation
+
+- 12 clean speech utterances from 6 speakers
+- 4 utterances used for development
+- 8 utterances used for testing
+- 16 kHz, mono audio
+- Two noise conditions:
+  - white Gaussian noise
+  - self-recorded non-stationary environmental noise
+- Input SNR levels:
+  - 0 dB
+  - 5 dB
+  - 10 dB
+- 72 controlled noisy mixtures in total:
+  - 24 development mixtures
+  - 48 test mixtures
+
+### STFT / ISTFT Validation
+
+The custom STFT and inverse-STFT implementation was validated before applying any enhancement processing.
+
+For one development mixture:
+
+- Reconstruction SNR: 185.07 dB
+- Maximum absolute reconstruction error: approximately 2.22 × 10^-16
+- Signal length was preserved exactly
+
+This confirms that the STFT/ISTFT processing chain introduces negligible reconstruction error.
+
+### Preliminary Baseline Result
+
+A basic spectral-subtraction method has been implemented using a noise estimate obtained from the initial 0.5-second noise-only segment.
+
+For one environmental-noise example at approximately 0 dB input SNR:
+
+- Input SNR: approximately 0 dB
+- Output SNR: 7.37 dB
+- SNR improvement: 7.37 dB
+
+The result shows clear noise reduction, although further analysis is required to examine speech distortion and musical-noise artefacts.
+
+### Preliminary Figures
+
+#### Environmental Noise Variation
+
+![Environmental Noise RMS Variation](results/figures/environmental_noise_rms_variation.png)
+
+#### STFT / ISTFT Reconstruction
+
+![STFT ISTFT Reconstruction](results/figures/stft_istft_reconstruction_check.png)
+
+#### Basic Spectral Subtraction
+
+![Basic Spectral Subtraction](results/figures/basic_spectral_subtraction_waveforms.png)
+
+### Next Steps
+
+The next stages of the project will investigate:
+
+- modified spectral subtraction using over-subtraction and spectral flooring;
+- SNR and STOI evaluation;
+- perceptual-quality analysis;
+- residual-noise and speech-distortion trade-offs;
+- phase-related limitations;
+- comparison with a pretrained modern speech-enhancement model.
 ## Project Status
 
 **Current stage:** Revised project design following proposal feedback.
