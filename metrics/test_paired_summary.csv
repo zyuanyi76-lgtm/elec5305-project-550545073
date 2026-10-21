@@ -1,4 +1,0 @@
-method,mean_snr_difference_vs_basic_db,mean_stoi_difference_vs_basic,snr_better_count_out_of_48,stoi_better_count_out_of_48
-SNR_focused,0.662471453595363,-0.00292987311845427,41,10
-STOI_focused,-0.0141676832447532,0.00051708507506118,13,41
-Aggressive_diagnostic,-0.794332262410032,-0.022039476867363,14,2
