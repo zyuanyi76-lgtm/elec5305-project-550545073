@@ -1,0 +1,25 @@
+
+# Original speech datasets
+data/clean/LibriSpeech/
+data/clean/*.tar.gz
+
+# Generated noisy speech mixtures
+data/mixtures/
+
+# Original and downloaded noise files
+data/noise/
+
+# Pretrained model files
+external/
+
+# Local code backups
+code_backup_before_portable/
+
+# MATLAB temporary files
+*.asv
+*.m~
+*.autosave
+
+# Operating system files
+Thumbs.db
+.DS_Store
